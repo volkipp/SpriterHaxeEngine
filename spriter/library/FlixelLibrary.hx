@@ -136,9 +136,7 @@ class FlixelLibrary extends AbstractLibrary
 		
 		_flxGroup.add(sprite);
 	}
-	override public function setRoot(root:Dynamic):Void 
-	{
-	}
+
 	override public function render():Void
 	{		
 	}

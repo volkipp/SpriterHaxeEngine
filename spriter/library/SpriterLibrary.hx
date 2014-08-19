@@ -26,17 +26,14 @@ class SpriterLibrary extends AbstractLibrary
 	 * 
 	 * @param	_basePath 
 	 */
-	public function new(basePath :String) 
+	public function new(root :Sprite, basePath :String) 
 	{
 		_basePath = basePath;
 		_groups = new Map < String, Map < String, Bitmap >> ();
+		_root = root;
 		super(basePath);
 	}
-	
-	override public function setRoot(root:Dynamic):Void {
-		_root = cast root;
-	}
-	
+		
 	/**
 	 * 
 	 * @param	name of the image

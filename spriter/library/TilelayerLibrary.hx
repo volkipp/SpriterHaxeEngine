@@ -28,22 +28,20 @@ class TilelayerLibrary extends AbstractLibrary
 	 * @param	dataPath .json
 	 * @param	atlasPath .png
 	 */
-	public function new(dataPath:String = "", atlasPath:String = "") 
+	public function new(root :Sprite, dataPath :String = "", atlasPath :String = "") 
 	{
 		super(dataPath);
 		var sheetData = Assets.getText(dataPath);
 		var tilesheet = new SparrowTilesheet(Assets.getBitmapData(atlasPath), sheetData);
 		_layer = new TileLayer(tilesheet, true);
-		
+
+		_root = root;
+		_root.addChild(_layer.view); // layer is NOT a DisplayObject
+
 		/*_group = new TileGroup(_layer);
 		_layer.addChild(_group);*/
 	}
-	
-	override public function setRoot(root:Sprite):Void {
-		_root = root;
-		_root.addChild(_layer.view); // layer is NOT a DisplayObject
-	}
-	
+		
 	override public function getFile(name:String):Dynamic
 	{
 		var sprite:TileSprite = new TileSprite(_layer, name);
