@@ -32,17 +32,14 @@ class FlambeLibrary extends AbstractLibrary
 	 * @param  basePath The base path to the assets.
 	 * @return          [description]
 	 */
-	public function new(entity:Entity, pack:AssetPack, basePath:String) 
+	public function new(rootEntity:Entity, pack:AssetPack, basePath:String) 
 	{
 		super(basePath);
 		_pack = pack;
         _point = new Point();
         _matrix = new Matrix();
-        _rootEntity = entity;
-        if ( _rootEntity.get(Sprite) == null )
-        {
-        	_rootEntity.add(new Sprite());
-        }
+        _rootEntity = rootEntity;
+        // _rootEntity = new Entity().add( new Sprite() );
 	}
 	override public function getFile(name:String):Dynamic
 	{
@@ -85,7 +82,6 @@ class FlambeLibrary extends AbstractLibrary
         _pack = null;
         _rootEntity.dispose();
         _rootEntity = null;
-		render();
 	}
 	
 }
