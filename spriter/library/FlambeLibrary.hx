@@ -25,7 +25,9 @@ class FlambeLibrary extends AbstractLibrary
     private var _pack 		:AssetPack;
     // The root entity that stores all the graphics for this Spriter Library. 
     private var _rootEntity :Entity;
-	
+	// Contains a String map of the Textures that could be used in this movie. 
+	private var _textures 	:Map<String, Texture>;
+
 	/**
 	 * Creates a new Flambe Spriter Library.
 	 * @param  entity   The entity to add the graphics to.
@@ -40,6 +42,8 @@ class FlambeLibrary extends AbstractLibrary
         _point = new Point();
         _matrix = new Matrix();
         _rootEntity = rootEntity;
+        _textures = new Map<String, Texture>();
+
         // _rootEntity = new Entity().add( new Sprite() );
 	}
 	override public function getFile(name:String):Dynamic
@@ -49,10 +53,14 @@ class FlambeLibrary extends AbstractLibrary
 
 	private function getTexture(name:String):Texture
 	{
-		var aSplitName:Array<String> = name.split(".");
-		aSplitName.pop();
-		name = aSplitName.join("");
-		return _pack.getTexture(_basePath + "/" + name);
+		if ( !_textures.exists(name) )
+		{
+			var noExtension:String = name.substring(0, name.lastIndexOf("."));
+			
+			_textures.set(name, _pack.getTexture(_basePath + "/" + noExtension) );
+		}
+
+		return _textures.get(name);
 	}
 
 	override public function clear():Void
@@ -70,11 +78,6 @@ class FlambeLibrary extends AbstractLibrary
 		var sprite:ImageSprite = new ImageSprite(bmp);
 		var localMatrix:Matrix = sprite.getLocalMatrix();
 		localMatrix.compose(spatialResult.x, spatialResult.y, spatialResult.scaleX, spatialResult.scaleY, FMath.toRadians(SpriterUtil.fixRotation(spatialResult.angle)));
-        // localMatrix.translate(-anchorX._, -anchorY._);
-
-		// sprite.setXY(spatialResult.x, spatialResult.y);
-		// sprite.setRotation(SpriterUtil.fixRotation(spatialResult.angle));
-		// sprite.setScaleXY(spatialResult.scaleX, spatialResult.scaleY);
 		sprite.alpha._ = spatialResult.a;
 		
 		// Add as new child to the root. 
