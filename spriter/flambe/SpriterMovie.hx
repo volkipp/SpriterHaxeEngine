@@ -74,4 +74,19 @@ class SpriterMovie extends Component
 		_spriter.playAnim(sAnimName);
 		return this;
 	}
+
+	/**
+	 * Chainable method for setting the character map.
+	 * @param  sAnimName Name of the animation to play. 
+	 * @return           [description]
+	 */
+	public function applyCharacterMap(sMapName:String):SpriterMovie
+	{
+		var bMapExists:Bool = _spriter.applyCharacterMap(sMapName, true);
+		if ( !bMapExists )
+		{
+			throw "Character Map: " + sMapName + " doesn't exist on Spriter " + _spriter.spriterName;
+		}
+		return this;
+	}
 }
