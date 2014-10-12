@@ -39,7 +39,6 @@ class SpriterMovie extends Component
 		var aPath:Array<String> = scmlFilePath.split("/");
 		aPath.pop();
 		_basePath = aPath.join("/");
-		trace("basePath: " + _basePath);
 
 		// Get the SCML Object.
 		var scml_str:String = _pack.getFile(scmlFilePath).toString();

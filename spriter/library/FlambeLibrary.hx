@@ -8,6 +8,7 @@ import flambe.Entity;
 import flambe.math.FMath;
 import flambe.math.Point;
 import flambe.math.Matrix;
+import flambe.util.Pool;
 import spriter.definitions.PivotInfo;
 import spriter.definitions.SpatialInfo;
 import spriter.util.ColorUtils;
@@ -26,7 +27,9 @@ class FlambeLibrary extends AbstractLibrary
     // The root entity that stores all the graphics for this Spriter Library. 
     private var _rootEntity :Entity;
 	// Contains a String map of the Textures that could be used in this movie. 
-	private var _textures 	:Map<String, Texture>;
+	private static var _textures 	:Map<String, Texture>;
+	// A pool of entities to use since multiple are being added per frame update.
+	private var _entityPool :Pool<Entity>;
 
 	/**
 	 * Creates a new Flambe Spriter Library.
@@ -43,6 +46,7 @@ class FlambeLibrary extends AbstractLibrary
         _matrix = new Matrix();
         _rootEntity = rootEntity;
         _textures = new Map<String, Texture>();
+        _entityPool = new Pool<Entity>(function () return new Entity()).setSize(25);
 
         // _rootEntity = new Entity().add( new Sprite() );
 	}
@@ -65,7 +69,12 @@ class FlambeLibrary extends AbstractLibrary
 
 	override public function clear():Void
 	{
-        _rootEntity.disposeChildren();
+		while ( _rootEntity.firstChild != null )
+		{
+			var child:Entity = _rootEntity.firstChild;
+			_rootEntity.removeChild( child );
+			_entityPool.put( child );
+		}
         _rootEntity.add( new Sprite() );
     }
 	override public function addGraphic(group:String, timeline:Int, key:Int, name:String, info:SpatialInfo, pivots:PivotInfo):Void
@@ -81,7 +90,7 @@ class FlambeLibrary extends AbstractLibrary
 		sprite.alpha._ = spatialResult.a;
 		
 		// Add as new child to the root. 
-		_rootEntity.addChild(new Entity().add(sprite));
+		_rootEntity.addChild(_entityPool.take().add(sprite));
 	}
 
 	override public function render():Void
