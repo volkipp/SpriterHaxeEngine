@@ -82,7 +82,7 @@ class SpriterMovie extends Component
 	 */
 	public function applyCharacterMap(sMapName:String):SpriterMovie
 	{
-		var bMapExists:Bool = _spriter.applyCharacterMap(sMapName, true);
+		var bMapExists:Bool = _spriter.applyCharacterMap(sMapName, false);
 		if ( !bMapExists )
 		{
 			throw "Character Map: " + sMapName + " doesn't exist on Spriter " + _spriter.spriterName;
