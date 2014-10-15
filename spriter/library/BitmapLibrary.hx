@@ -63,9 +63,7 @@ class BitmapLibrary extends AbstractLibrary
             _canvas.draw(bmp, _matrix, _alphaTransform, null, null, true);
         }
 	}
-	override public function setRoot(root:Dynamic):Void 
-	{
-	}
+
 	override public function render():Void
 	{	
 		_canvas.unlock();

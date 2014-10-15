@@ -1,6 +1,4 @@
 package spriter.engine;
-import flash.display.Sprite;
-import flash.Lib;
 import spriter.definitions.ScmlObject;
 import spriter.definitions.SpatialInfo;
 import spriter.library.AbstractLibrary;
@@ -37,10 +35,6 @@ class SpriterEngine
 	 * This is the lib used to retrieve a graphic and display the Spriter on screen.
 	 */
 	var _lib:AbstractLibrary;
-	/**
-	 * Main Graphic Sprite where all the Spriter are displayed.
-	 */
-	var _graphics:Sprite;
 	/*
 	 * #############################################
 	 * Time
@@ -66,7 +60,7 @@ class SpriterEngine
 	/**
 	 * Time in Milliseconds since last frame.
 	 */
-	var _elapsed:Int;
+	// var _elapsed:Int;
 	/**
 	 * Framerate locked to avoid frameskip. Used with variable tick.
 	 * @default 100 (10 fps)
@@ -80,23 +74,21 @@ class SpriterEngine
 	/**
 	 * Total Ticks passed since game start.
 	 */
-	var _totalTicks:Int = 0;
+	// var _totalTicks:Int = 0;
 	/**
 	 * Fixed or variable tick.
 	 */
 	public var fixedTick:Bool = true;
 	
-	public function new(scml_str:String, library:AbstractLibrary, graphics:Sprite, frameRate:Int = 60) 
+	public function new(scml_str:String, library:AbstractLibrary, frameRate:Int = 60) 
 	{
 		_spriters = new Array<Spriter>();
 		_spritersNamed = new Map<String ,Spriter>();
 		
 		scml = new ScmlObject(Xml.parse(scml_str));
 		_lib = library;
-		_graphics = graphics;
-		_lib.setRoot(_graphics);
 		this.framerate = frameRate;
-		_lastTime = Lib.getTimer();
+		// _lastTime = Lib.getTimer();
 	}
 	/**
 	 * Allow you to add a Spriter on screen.
@@ -235,16 +227,12 @@ class SpriterEngine
 	 * Call it from ENTER_FRAME or your own update engine.
 	 * @param	?customElasped (optional) if you have your own engine handles elapsedTime. MilliSeconds!
 	 */
-	public function update(?customElapsed:Int):Void
+	public function update(dt :Int):Void
 	{
 		if (!paused)
 		{
-			if (customElapsed != null) {
-				_elapsed = customElapsed;
-			}else {
-				computeTime();
-			}
-			
+			dt = dt <= maxElapsed ? dt :maxElapsed;
+			_total += dt;
 			_lib.clear();//TODO handle different for other platform?
 			
 			var numSpriters:Int = _spriters.length;
@@ -253,7 +241,7 @@ class SpriterEngine
 				for (i in 0...numSpriters)
 				{
 					spriter = _spriters[i];
-					spriter.advanceTime(_elapsed);
+					spriter.advanceTime(dt);
 				}
 				_lib.render();
 			}
@@ -285,31 +273,31 @@ class SpriterEngine
 	{
 		if(paused){
 			paused = false;
-			_lastTime = Lib.getTimer();
+			// _lastTime = Lib.getTimer();
 		}
 		
 	}
 	/**
 	 * Time 
 	 */
-	function computeTime():Void
-	{
-		_totalTicks++;
-		if (fixedTick)
-		{
-			_elapsed = _frameDuration;
-		}
-		else
-		{
-			var previous:Int = _lastTime;
-			_lastTime = Lib.getTimer();
-			_elapsed = _lastTime - previous;
+	// function computeTime():Void
+	// {
+	// 	_totalTicks++;
+	// 	if (fixedTick)
+	// 	{
+	// 		_elapsed = _frameDuration;
+	// 	}
+	// 	else
+	// 	{
+	// 		var previous:Int = _lastTime;
+	// 		_lastTime = Lib.getTimer();
+	// 		_elapsed = _lastTime - previous;
 
-			if (_elapsed > maxElapsed) 
-				_elapsed = maxElapsed;
-		}
-		_total += _elapsed;
-	}
+	// 		if (_elapsed > maxElapsed) 
+	// 			_elapsed = maxElapsed;
+	// 	}
+	// 	_total += _elapsed;
+	// }
 
 	function set_framerate(framerate_:Int):Int
 	{

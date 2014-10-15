@@ -1,5 +1,5 @@
 package spriter.library;
-import openfl.geom.Point;
+// import openfl.geom.Point;
 import spriter.definitions.PivotInfo;
 import spriter.definitions.Quadrilateral;
 import spriter.definitions.SpatialInfo;
@@ -22,11 +22,6 @@ class AbstractLibrary
 	public function new(basePath :String) 
 	{
 		_basePath = basePath;
-	}
-	
-	public function setRoot(root:Dynamic):Void 
-	{
-		throw ("must be overrided");
 	}
 	
 	/**
@@ -106,7 +101,7 @@ class AbstractLibrary
 		x1 = (x1 - pivotX) * c - (y1 - pivotY) * s + pivotX;
 		y1 = (x1 - pivotX) * s + (y1 - pivotY) * c + pivotY;
 		
-		return new Quadrilateral(new Point(x1, y1), new Point(x2, y2), new Point(x3, y3), new Point(x4, y4));
+		return new Quadrilateral(new QuadPoint(x1, y1), new QuadPoint(x2, y2), new QuadPoint(x3, y3), new QuadPoint(x4, y4));
 	}
 	
 	public function render():Void
